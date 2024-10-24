@@ -42,7 +42,9 @@ export default class Response {
         this.end();
     }
     JSON(obj, ETag = "",fromCache = false) {
-        
+        if (!fromCache && this.HttpContext.isCacheable) {
+            CachedRequestsManager.add(this.HttpContext.req.url,obj,ETag);
+        }
         
                                // ok status with content
         if (ETag != "")
@@ -51,9 +53,7 @@ export default class Response {
             this.res.writeHead(200, { 'content-type': 'application/json' });
         if (obj != null) {
             let content = JSON.stringify(obj);
-            if (!fromCache && this.HttpContext.isCacheable) {
-                CachedRequestsManager.add(this.HttpContext.req.url,content,ETag);
-            }
+           
             console.log(FgCyan+Bright, "Response payload -->", content.toString().substring(0, 75) + "...");
             return this.end(content);
         } else

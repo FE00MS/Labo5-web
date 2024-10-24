@@ -33,7 +33,7 @@ export default class CachedRequestsManager {
                         // renew cache
                         cache.Expire_Time = utilities.nowInSeconds() + cachedRequestExpirationTime;
                         console.log(BgWhite + FgBlue, `[${cache.url} content and ETag retrieved from cache]`);
-                        return cache.content , cache.ETag;
+                        return{content : cache.content ,ETag: cache.ETag};
                     }
                 }
             }
