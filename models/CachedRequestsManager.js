@@ -22,7 +22,7 @@ export default class CachedRequestsManager {
                 ETag,
                 Expire_Time: utilities.nowInSeconds() + cachedRequestExpirationTime
             });
-            console.log(BgWhite + FgBlue, `[Content and ETag of ${url} request has been cached]`);
+            console.log(FgWhite, `[Content and ETag of ${url} request has been cached]`);
         }
     }
     static find(url) {
@@ -32,13 +32,13 @@ export default class CachedRequestsManager {
                     if (cache.url == url) {
                         // renew cache
                         cache.Expire_Time = utilities.nowInSeconds() + cachedRequestExpirationTime;
-                        console.log(BgWhite + FgBlue, `[${cache.url} content and ETag retrieved from cache]`);
+                        console.log(FgWhite, `[${cache.url} content and ETag retrieved from cache]`);
                         return{content : cache.content ,ETag: cache.ETag};
                     }
                 }
             }
         } catch (error) {
-            console.log(BgWhite + FgRed, "[requested cache error!]", error);
+            console.log(FgWhite , "[requested cache error!]", error);
         }
         return null;
     }
@@ -57,7 +57,7 @@ export default class CachedRequestsManager {
     static startCachedRequestsCleaner() {
         // periodic cleaning of expired cached repository data
         setInterval(CachedRequestsManager.flushExpired, cachedRequestExpirationTime * 1000);
-        console.log(BgWhite + FgBlue, "[Periodic requests content and ETag caches cleaning process started...]");
+        console.log(FgWhite, "[Periodic requests content and ETag caches cleaning process started...]");
 
     }
 
@@ -65,7 +65,7 @@ export default class CachedRequestsManager {
         let now = utilities.nowInSeconds();
         for (let cache of cachedRequests) {
             if (cache.Expire_Time <= now) {
-                console.log(BgWhite + FgBlue, "Cached file content and ETag of " + cache.url + " expired");
+                console.log(FgWhite , "Cached file content and ETag of " + cache.url + " expired");
             }
         }
 
@@ -78,7 +78,7 @@ export default class CachedRequestsManager {
         CachedRequestsManager.add(HttpContext.req.url,HttpContext.content,HttpContext.ETag);
         return false;
        }else{
-         HttpContext.response.JSON( cacherequest.content, cacherequest.ETag, true /* from cache */)
+         HttpContext.response.JSON( cacherequest.content, cacherequest.ETag, true /* from cache */);
         return true;
         }
     }
